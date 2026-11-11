@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamiltonian Graphs: Theory, Theorems & Interactive Sandbox</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        canvas { touch-action: none; }
+        .math-symbol { font-family: 'Times New Roman', serif; font-style: italic; }
+        @keyframes floatBubble {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-6px) scale(1.02); }
+        }
+        .floating-alert { animation: floatBubble 2.5s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header & Branding -->
+    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-indigo-500 to-purple-600 p-2.5 rounded-xl shadow-lg shadow-indigo-500/20">
+                    <i class="fa-solid fa-route text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Hamiltonian Graphs: Theory, Theorems & Interactive Sandbox</h1>
+                    <p class="text-xs text-slate-400">Created and authorized by Surajit Sahoo</p>
+                </div>
+            </div>
+            <nav class="flex items-center space-x-2 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/60">
+                <button onclick="switchTab('theory')" id="btn-theory" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-indigo-600 text-white shadow-md">
+                    <i class="fa-solid fa-book-open mr-2"></i>Theory & Theorems
+                </button>
+                <button onclick="switchTab('sandbox')" id="btn-sandbox" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-700/50">
+                    <i class="fa-solid fa-pen-to-square mr-2"></i>Interactive Sandbox
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full flex-grow space-y-10">
+
+        <!-- ================= THEORY & THEOREMS TAB ================= -->
+        <section id="tab-theory" class="space-y-10">
+            <!-- Hero Introduction -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="max-w-3xl space-y-4">
+                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/25">
+                        <i class="fa-solid fa-graduation-cap mr-2"></i> Vertex Traversal Framework
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Hamiltonian Paths & Cycles</h2>
+                    <p class="text-slate-300 leading-relaxed text-sm sm:text-base">
+                        A <strong>Hamiltonian path</strong> visits every vertex of a graph exactly once, while a <strong>Hamiltonian cycle</strong> is a closed loop visiting every vertex exactly once before returning to the start. Determining Hamiltonicity is an NP-complete problem.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Necessary & Sufficient Conditions Grid -->
+            <div class="space-y-6">
+                <h3 class="text-2xl font-bold">Mandatory Properties, Necessary Conditions & Sufficient Theorems</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Mandatory Connectedness -->
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold">1</div>
+                            <h4 class="text-lg font-bold">Mandatory Connectedness</h4>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            <strong>Connectedness is mandatory</strong> for any graph containing a Hamiltonian path or cycle. If a graph is disconnected, components cannot be spanned continuously across all vertices.
+                        </p>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-cyan-400">
+                            G must be connected to possess a Hamiltonian cycle or path.
+                        </div>
+                    </div>
+
+                    <!-- Connected Components Theorem -->
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold">2</div>
+                            <h4 class="text-lg font-bold">Connected Components Theorem (Vertex Subsets)</h4>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            If <span class="math-symbol">G</span> is Hamiltonian, then for every nonempty proper subset <span class="math-symbol">S ⊂ V(G)</span>, the number of connected components of <span class="math-symbol">G - S</span> is at most <span class="math-symbol">|S|</span>.
+                        </p>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-blue-400 space-y-1">
+                            <div>c(G - S) ≤ |S|</div>
+                            <div class="text-slate-400 text-[11px]">Example: Deleting vertex subsets from a cycle results in limited broken paths.</div>
+                        </div>
+                    </div>
+
+                    <!-- Minimum-Degree Condition -->
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold">3</div>
+                            <h4 class="text-lg font-bold">Minimum-Degree Condition</h4>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            If a simple graph <span class="math-symbol">G</span> with <span class="math-symbol">n ≥ 3</span> vertices is Hamiltonian, then every vertex has degree at least two: <span class="math-symbol">δ(G) ≥ 2</span>. Vertices of degree 0 or 1 rule out cycles.
+                        </p>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-indigo-400">
+                            δ(G) ≥ 2
+                        </div>
+                    </div>
+
+                    <!-- Dirac's Theorem -->
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold">4</div>
+                            <h4 class="text-lg font-bold">Dirac's Theorem (Sufficient)</h4>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Let <span class="math-symbol">G</span> be a simple graph with <span class="math-symbol">n ≥ 3</span> vertices. If <span class="math-symbol">deg(v) ≥ n/2</span> for every <span class="math-symbol">v ∈ V(G)</span>, then <span class="math-symbol">G</span> is Hamiltonian.
+                        </p>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-emerald-400">
+                            deg(v) ≥ n/2 for every v ⟹ Hamiltonian
+                        </div>
+                    </div>
+
+                    <!-- Ore's Theorem -->
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-4 md:col-span-2">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold">5</div>
+                            <h4 class="text-lg font-bold">Ore's Theorem (Sufficient)</h4>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Let <span class="math-symbol">G</span> be a simple graph with <span class="math-symbol">n ≥ 3</span> vertices. If <span class="math-symbol">deg(u) + deg(v) ≥ n</span> for <strong>every pair of distinct nonadjacent vertices</strong> <span class="math-symbol">u, v</span>, then <span class="math-symbol">G</span> is Hamiltonian.
+                        </p>
+                        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs text-purple-400">
+                            deg(u) + deg(v) ≥ n for every pair of distinct nonadjacent vertices u, v ⟹ Hamiltonian
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SANDBOX TAB ================= -->
+        <section id="tab-sandbox" class="hidden space-y-6">
+            <!-- Sandbox Header & Toolbar -->
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-slate-900/60 border border-slate-800 p-4 sm:p-6 rounded-2xl shadow-lg">
+                <div class="space-y-1">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-hammer text-indigo-400"></i> Interactive Hamiltonian Workspace & Solver
+                    </h2>
+                    <p class="text-xs text-slate-400">Select mode below (Add Node, Add Edge, or Delete Mode) to build or edit your graph explicitly.</p>
+                </div>
+                <!-- Sandbox Toolbar Buttons -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="setSandboxMode('node')" id="btn-mode-node" class="px-3.5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 shadow-md">
+                        <i class="fa-solid fa-circle-plus"></i> Add Node
+                    </button>
+                    <button onclick="setSandboxMode('edge')" id="btn-mode-edge" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-link"></i> Add Edge
+                    </button>
+                    <button onclick="setSandboxMode('delete')" id="btn-mode-delete" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-trash-can text-amber-400"></i> Delete Mode
+                    </button>
+                    <button onclick="clearCanvas()" class="px-3.5 py-2 bg-slate-800 hover:bg-red-500/20 hover:border-red-500/50 text-slate-300 hover:text-red-400 border border-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate-right"></i> Reset All
+                    </button>
+                    <button onclick="loadPreset('pentagon')" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold transition-all">
+                        Preset: Cycle C₅
+                    </button>
+                    <button onclick="loadPreset('path')" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold transition-all">
+                        Preset: Path P₅ (Has Path, No Cycle)
+                    </button>
+                    <button onclick="loadPreset('complete')" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold transition-all">
+                        Preset: Complete K₅
+                    </button>
+                </div>
+            </div>
+
+            <!-- Workspace Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Canvas Area -->
+                <div class="lg:col-span-2 bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col relative shadow-xl min-h-[500px]">
+                    <div class="absolute top-6 left-6 z-10 flex items-center gap-2 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-800 text-xs text-slate-300 shadow-md flex-wrap">
+                        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                        <span id="canvas-mode-text">Current Mode: Add Node (Click canvas to create node)</span>
+                    </div>
+
+                    <div class="flex-grow w-full h-[430px] relative rounded-xl overflow-hidden bg-slate-950/80 border border-slate-800/80 cursor-crosshair">
+                        <canvas id="graphCanvas" class="w-full h-full block"></canvas>
+                    </div>
+
+                    <!-- Playback Controls Bar -->
+                    <div class="mt-4 flex flex-wrap items-center justify-between gap-3 bg-slate-950/90 p-3 rounded-xl border border-slate-800">
+                        <div class="flex items-center gap-3">
+                            <button onclick="runHamiltonianCheck()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-indigo-400 border border-indigo-500/30 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Solve Hamiltonian Traversal
+                            </button>
+                            
+                            <!-- Start Vertex Dropdown Selector -->
+                            <div class="flex items-center gap-1.5 bg-slate-900 px-3 py-1.5 rounded-xl border border-emerald-500/30 text-xs">
+                                <i class="fa-solid fa-flag-checkered text-emerald-400"></i>
+                                <span class="text-slate-400 font-medium">Start:</span>
+                                <select id="start-vertex-select" onchange="onStartVertexChange(this.value)" class="bg-slate-950 text-emerald-300 font-bold border border-slate-700 rounded-lg px-2 py-1 focus:outline-none focus:border-emerald-400">
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Step-by-Step Playback Controls -->
+                        <div class="flex flex-wrap items-center gap-1.5 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
+                            <button onclick="stepPrev()" id="btn-prev" title="Previous Step" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                                <i class="fa-solid fa-backward-step"></i> Prev
+                            </button>
+                            <button onclick="startPlayback()" id="btn-play" title="Play Traversal" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1">
+                                <i class="fa-solid fa-play"></i> Play (Slow)
+                            </button>
+                            <button onclick="pausePlayback()" id="btn-pause" title="Pause Animation" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-bold transition-all shadow-sm hidden items-center gap-1">
+                                <i class="fa-solid fa-pause"></i> Pause
+                            </button>
+                            <button onclick="stepNext()" id="btn-next" title="Next Step" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold transition-all">
+                                Next <i class="fa-solid fa-forward-step"></i>
+                            </button>
+                            <button onclick="stopPlayback()" id="btn-stop" title="Stop & Reset Simulation" class="px-3.5 py-1.5 bg-red-600/80 hover:bg-red-600 text-white rounded-lg text-xs font-semibold transition-all">
+                                <i class="fa-solid fa-stop"></i> Stop
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Sidebar & Narration Box -->
+                <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-4">
+                        <h3 class="text-base font-bold flex items-center gap-2 border-b border-slate-800 pb-3">
+                            <i class="fa-solid fa-square-poll-vertical text-indigo-400"></i> Rigorous Analysis Report
+                        </h3>
+
+                        <!-- Verdict Card -->
+                        <div id="verdict-card" class="p-4 rounded-xl border border-slate-800 bg-slate-950 space-y-2">
+                            <div class="text-xs text-slate-400 uppercase font-semibold tracking-wider">Theorem Status</div>
+                            <div id="verdict-title" class="text-lg font-bold text-slate-200">Not Analyzed Yet</div>
+                            <p id="verdict-desc" class="text-xs text-slate-400 leading-relaxed">Draw a graph or load a preset, then click "Solve Hamiltonian Traversal" to evaluate.</p>
+                        </div>
+
+                        <!-- Degree Breakdown -->
+                        <div class="space-y-2">
+                            <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Vertex Degree Inspection <span class="math-symbol">deg(v)</span></div>
+                            <div id="degree-breakdown" class="bg-slate-950 p-3 rounded-xl border border-slate-800 max-h-40 overflow-y-auto space-y-1.5 text-xs font-mono">
+                                <span class="text-slate-500 italic font-sans">No nodes created yet.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Live Narration & Traversal Status</div>
+                        <div id="path-trail-box" class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-slate-300 min-h-[75px] flex items-center font-mono leading-relaxed">
+                            <span class="font-sans text-slate-500">Click "Play" to start traversal animation...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer / Copyright Notice -->
+    <footer class="bg-slate-900/90 border-t border-slate-800 mt-16 py-6 text-center text-xs text-slate-400 space-y-1">
+        <p>Hamiltonian Graph Theory Interactive Explorer • Developed for graph algorithms education.</p>
+        <p class="font-semibold text-indigo-400">Created and authorized by Surajit Sahoo</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        let currentTab = 'theory';
+        let vertices = [];
+        let edges = [];
+        let sandboxMode = 'node'; // 'node', 'edge', 'delete'
+        let selectedStartVertex = 0; 
+        
+        let canvas, ctx;
+        let isDraggingEdge = false;
+        let dragStartIndex = null;
+        let mouseX = 0, mouseY = 0;
+
+        let analysisResult = null;
+        let simulationStep = 0;
+        let simulationInterval = null;
+        let isSimulating = false;
+        let simulationPath = [];
+
+        window.onload = function() {
+            canvas = document.getElementById('graphCanvas');
+            if (canvas) {
+                ctx = canvas.getContext('2d');
+                resizeCanvas();
+                window.addEventListener('resize', resizeCanvas);
+
+                canvas.addEventListener('mousedown', handleCanvasMouseDown);
+                canvas.addEventListener('mousemove', handleCanvasMouseMove);
+                canvas.addEventListener('mouseup', handleCanvasMouseUp);
+
+                canvas.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 1) {
+                        const rect = canvas.getBoundingClientRect();
+                        mouseX = e.touches[0].clientX - rect.left;
+                        mouseY = e.touches[0].clientY - rect.top;
+                        handleCanvasMouseDown({ offsetX: mouseX, offsetY: mouseY });
+                    }
+                });
+                canvas.addEventListener('touchmove', (e) => {
+                    if (e.touches.length === 1) {
+                        const rect = canvas.getBoundingClientRect();
+                        mouseX = e.touches[0].clientX - rect.left;
+                        mouseY = e.touches[0].clientY - rect.top;
+                        handleCanvasMouseMove({ offsetX: mouseX, offsetY: mouseY });
+                    }
+                });
+                canvas.addEventListener('touchend', handleCanvasMouseUp);
+            }
+            loadPreset('pentagon');
+        };
+
+        function setSandboxMode(mode) {
+            sandboxMode = mode;
+            isDraggingEdge = false;
+            dragStartIndex = null;
+
+            const btnNode = document.getElementById('btn-mode-node');
+            const btnEdge = document.getElementById('btn-mode-edge');
+            const btnDelete = document.getElementById('btn-mode-delete');
+            const modeText = document.getElementById('canvas-mode-text');
+
+            btnNode.className = "px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5";
+            btnEdge.className = "px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5";
+            btnDelete.className = "px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5";
+
+            if (mode === 'node') {
+                btnNode.className = "px-3.5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 shadow-md";
+                if(modeText) modeText.textContent = "Current Mode: Add Node (Click canvas to create node)";
+            } else if (mode === 'edge') {
+                btnEdge.className = "px-3.5 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 shadow-md";
+                if(modeText) modeText.textContent = "Current Mode: Add Edge (Drag from one node to another)";
+            } else if (mode === 'delete') {
+                btnDelete.className = "px-3.5 py-2 bg-amber-600/20 border border-amber-500/50 text-amber-300 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm";
+                if(modeText) modeText.textContent = "Current Mode: Delete (Click node or edge to delete)";
+            }
+            redrawCanvas();
+        }
+
+        function populateStartVertexDropdown() {
+            const select = document.getElementById('start-vertex-select');
+            if (!select) return;
+            select.innerHTML = '';
+            
+            if (vertices.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '-1';
+                opt.textContent = 'None';
+                select.appendChild(opt);
+                return;
+            }
+
+            if (selectedStartVertex >= vertices.length) {
+                selectedStartVertex = 0;
+            }
+
+            vertices.forEach((v, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.textContent = `${v.name || 'v' + (idx + 1)}`;
+                if (idx === selectedStartVertex) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        function onStartVertexChange(val) {
+            const idx = parseInt(val, 10);
+            if (!isNaN(idx) && idx >= 0 && idx < vertices.length) {
+                selectedStartVertex = idx;
+                stopPlayback();
+                runHamiltonianCheck();
+                redrawCanvas();
+            }
+        }
+
+        function resizeCanvas() {
+            if (!canvas) return;
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            redrawCanvas();
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            const btnTheory = document.getElementById('btn-theory');
+            const btnSandbox = document.getElementById('btn-sandbox');
+            const tabTheory = document.getElementById('tab-theory');
+            const tabSandbox = document.getElementById('tab-sandbox');
+
+            if (tabId === 'theory') {
+                btnTheory.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-indigo-600 text-white shadow-md";
+                btnSandbox.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-700/50";
+                tabTheory.classList.remove('hidden');
+                tabSandbox.classList.add('hidden');
+            } else {
+                btnSandbox.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-indigo-600 text-white shadow-md";
+                btnTheory.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-700/50";
+                tabSandbox.classList.remove('hidden');
+                tabTheory.classList.add('hidden');
+                setTimeout(() => { resizeCanvas(); }, 50);
+            }
+        }
+
+        function loadPreset(type) {
+            vertices = [];
+            edges = [];
+            selectedStartVertex = 0;
+            stopPlayback();
+            analysisResult = null;
+            setSandboxMode('node');
+
+            const w = canvas ? canvas.width : 600;
+            const h = canvas ? canvas.height : 430;
+            const cx = w / 2;
+            const cy = h / 2;
+            const r = Math.min(w, h) * 0.28;
+
+            if (type === 'pentagon') {
+                const n = 5;
+                for (let i = 0; i < n; i++) {
+                    const angle = (i * 2 * Math.PI) / n - Math.PI / 2;
+                    vertices.push({ x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle), name: `v${i+1}` });
+                }
+                for (let i = 0; i < n; i++) {
+                    edges.push({ u: i, v: (i + 1) % n });
+                }
+                selectedStartVertex = 0;
+            } else if (type === 'path') {
+                const n = 5;
+                const spacing = w / (n + 1);
+                for (let i = 0; i < n; i++) {
+                    vertices.push({ x: spacing * (i + 1), y: cy, name: `v${i+1}` });
+                }
+                for (let i = 0; i < n - 1; i++) {
+                    edges.push({ u: i, v: i + 1 });
+                }
+                selectedStartVertex = 0;
+            } else if (type === 'complete') {
+                const n = 5;
+                for (let i = 0; i < n; i++) {
+                    const angle = (i * 2 * Math.PI) / n - Math.PI / 2;
+                    vertices.push({ x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle), name: `v${i+1}` });
+                }
+                for (let i = 0; i < n; i++) {
+                    for (let j = i + 1; j < n; j++) {
+                        edges.push({ u: i, v: j });
+                    }
+                }
+                selectedStartVertex = 0;
+            }
+
+            populateStartVertexDropdown();
+            runHamiltonianCheck();
+            redrawCanvas();
+        }
+
+        function clearCanvas() {
+            vertices = [];
+            edges = [];
+            selectedStartVertex = 0;
+            stopPlayback();
+            analysisResult = null;
+            setSandboxMode('node');
+            populateStartVertexDropdown();
+            updateUI();
+            redrawCanvas();
+        }
+
+        function getVertexAtPos(x, y) {
+            const radius = 22;
+            for (let i = 0; i < vertices.length; i++) {
+                const dx = vertices[i].x - x;
+                const dy = vertices[i].y - y;
+                if (Math.sqrt(dx * dx + dy * dy) <= radius) return i;
+            }
+            return -1;
+        }
+
+        function getEdgeAtPos(x, y) {
+            for (let i = 0; i < edges.length; i++) {
+                const ed = edges[i];
+                const uNode = vertices[ed.u];
+                const vNode = vertices[ed.v];
+                if (!uNode || !vNode) continue;
+
+                let midX = (uNode.x + vNode.x) / 2;
+                let midY = (uNode.y + vNode.y) / 2;
+
+                const dist = Math.hypot(midX - x, midY - y);
+                if (dist <= 16) return i;
+            }
+            return -1;
+        }
+
+        function handleCanvasMouseDown(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.offsetX !== undefined ? e.offsetX : e.clientX - rect.left;
+            const y = e.offsetY !== undefined ? e.offsetY : e.clientY - rect.top;
+
+            const clickedVertex = getVertexAtPos(x, y);
+
+            if (sandboxMode === 'delete') {
+                if (clickedVertex !== -1) {
+                    edges = edges.filter(ed => ed.u !== clickedVertex && ed.v !== clickedVertex);
+                    edges.forEach(ed => {
+                        if (ed.u > clickedVertex) ed.u--;
+                        if (ed.v > clickedVertex) ed.v--;
+                    });
+                    vertices.splice(clickedVertex, 1);
+                    if (selectedStartVertex >= vertices.length) selectedStartVertex = Math.max(0, vertices.length - 1);
+                    stopPlayback();
+                    populateStartVertexDropdown();
+                    runHamiltonianCheck();
+                    redrawCanvas();
+                } else {
+                    const clickedEdge = getEdgeAtPos(x, y);
+                    if (clickedEdge !== -1) {
+                        edges.splice(clickedEdge, 1);
+                        stopPlayback();
+                        runHamiltonianCheck();
+                        redrawCanvas();
+                    }
+                }
+                return;
+            }
+
+            if (sandboxMode === 'node') {
+                if (clickedVertex === -1 && vertices.length < 12) {
+                    vertices.push({ x, y, name: `v${vertices.length + 1}` });
+                    stopPlayback();
+                    analysisResult = null;
+                    populateStartVertexDropdown();
+                    updateUI();
+                    redrawCanvas();
+                } else if (clickedVertex !== -1) {
+                    selectedStartVertex = clickedVertex;
+                    populateStartVertexDropdown();
+                    redrawCanvas();
+                }
+            } else if (sandboxMode === 'edge') {
+                if (clickedVertex !== -1) {
+                    isDraggingEdge = true;
+                    dragStartIndex = clickedVertex;
+                    mouseX = x;
+                    mouseY = y;
+                }
+            }
+        }
+
+        function handleCanvasMouseMove(e) {
+            if (sandboxMode !== 'edge' || !isDraggingEdge) return;
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.offsetX !== undefined ? e.offsetX : e.clientX - rect.left;
+            mouseY = e.offsetY !== undefined ? e.offsetY : e.clientY - rect.top;
+
+            redrawCanvas();
+            ctx.beginPath();
+            ctx.moveTo(vertices[dragStartIndex].x, vertices[dragStartIndex].y);
+            ctx.lineTo(mouseX, mouseY);
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function handleCanvasMouseUp(e) {
+            if (sandboxMode !== 'edge' || !isDraggingEdge) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.offsetX !== undefined ? e.offsetX : mouseX;
+            const y = e.offsetY !== undefined ? e.offsetY : mouseY;
+
+            const targetIndex = getVertexAtPos(x, y);
+            if (targetIndex !== -1 && targetIndex !== dragStartIndex) {
+                const exists = edges.some(ed => (ed.u === dragStartIndex && ed.v === targetIndex) || (ed.u === targetIndex && ed.v === dragStartIndex));
+                if (!exists) {
+                    edges.push({ u: dragStartIndex, v: targetIndex });
+                    stopPlayback();
+                    analysisResult = null;
+                    updateUI();
+                }
+            }
+            isDraggingEdge = false;
+            dragStartIndex = null;
+            redrawCanvas();
+        }
+
+        function runHamiltonianCheck() {
+            if (vertices.length === 0) {
+                analysisResult = null;
+                updateUI();
+                return;
+            }
+
+            const degrees = new Array(vertices.length).fill(0);
+            const adj = Array.from({ length: vertices.length }, () => []);
+
+            edges.forEach(ed => {
+                degrees[ed.u]++;
+                degrees[ed.v]++;
+                adj[ed.u].push(ed.v);
+                adj[ed.v].push(ed.u);
+            });
+
+            const startNode = selectedStartVertex < vertices.length ? selectedStartVertex : 0;
+            const cycle = findHamiltonianCycleBacktracking(adj, startNode);
+            const path = cycle.length > 0 ? cycle : findHamiltonianPathBacktracking(adj, startNode);
+
+            analysisResult = { 
+                degrees, 
+                hasCycle: cycle.length > 0, 
+                hasPath: path.length > 0,
+                cycle, 
+                path 
+            };
+            updateUI();
+            redrawCanvas();
+        }
+
+        function findHamiltonianCycleBacktracking(adj, start) {
+            const n = vertices.length;
+            if (n === 0) return [];
+
+            let foundPath = [];
+
+            function backtrack(curr, path, visited) {
+                if (path.length === n) {
+                    if (adj[curr].includes(path[0])) {
+                        foundPath = [...path, path[0]];
+                        return true;
+                    }
+                    return false;
+                }
+
+                for (let neighbor of adj[curr]) {
+                    if (!visited.has(neighbor)) {
+                        visited.add(neighbor);
+                        path.push(neighbor);
+                        if (backtrack(neighbor, path, visited)) return true;
+                        path.pop();
+                        visited.delete(neighbor);
+                    }
+                }
+                return false;
+            }
+
+            const visited = new Set([start]);
+            if (backtrack(start, [start], visited)) {
+                return foundPath;
+            }
+            return [];
+        }
+
+        function findHamiltonianPathBacktracking(adj, start) {
+            const n = vertices.length;
+            if (n === 0) return [];
+
+            let foundPath = [];
+
+            function backtrack(curr, path, visited) {
+                if (path.length === n) {
+                    foundPath = [...path];
+                    return true;
+                }
+
+                for (let neighbor of adj[curr]) {
+                    if (!visited.has(neighbor)) {
+                        visited.add(neighbor);
+                        path.push(neighbor);
+                        if (backtrack(neighbor, path, visited)) return true;
+                        path.pop();
+                        visited.delete(neighbor);
+                    }
+                }
+                return false;
+            }
+
+            const visited = new Set([start]);
+            if (backtrack(start, [start], visited)) {
+                return foundPath;
+            }
+
+            for (let i = 0; i < n; i++) {
+                if (i === start) continue;
+                visited.clear();
+                visited.add(i);
+                if (backtrack(i, [i], visited)) {
+                    return foundPath;
+                }
+            }
+            return [];
+        }
+
+        function updateUI() {
+            const verdictTitle = document.getElementById('verdict-title');
+            const verdictDesc = document.getElementById('verdict-desc');
+            const verdictCard = document.getElementById('verdict-card');
+            const degreeBreakdown = document.getElementById('degree-breakdown');
+
+            if (!analysisResult) {
+                verdictTitle.textContent = "Not Analyzed Yet";
+                verdictDesc.textContent = "Click 'Solve Hamiltonian Traversal' to evaluate graph properties.";
+                verdictCard.className = "p-4 rounded-xl border border-slate-800 bg-slate-950 space-y-2";
+                degreeBreakdown.innerHTML = `<span class="text-slate-500 italic font-sans">No nodes created yet.</span>`;
+                return;
+            }
+
+            let html = '';
+            analysisResult.degrees.forEach((deg, idx) => {
+                const isStart = idx === selectedStartVertex;
+                const vLabel = vertices[idx].name || `v${idx+1}`;
+                html += `<div class="flex justify-between items-center py-1 px-2 rounded bg-slate-900 border ${isStart ? 'border-emerald-500/60' : 'border-slate-800/60'}">
+                    <span class="${isStart ? 'text-emerald-400 font-bold' : ''}">${vLabel} ${isStart ? '🏁 (Start)' : ''}</span>
+                    <span class="text-indigo-400 font-bold">deg = ${deg}</span>
+                </div>`;
+            });
+            degreeBreakdown.innerHTML = html;
+
+            if (analysisResult.hasCycle) {
+                verdictTitle.textContent = "Hamiltonian Cycle Found! 🎉";
+                verdictDesc.textContent = `A valid closed loop visiting every vertex exactly once was discovered successfully.`;
+                verdictCard.className = "p-4 rounded-xl border border-emerald-500/40 bg-emerald-950/20 space-y-2";
+            } else if (analysisResult.hasPath) {
+                verdictTitle.textContent = "Hamiltonian Path Found! (No Cycle)";
+                verdictDesc.textContent = `A valid spanning path visiting every vertex exactly once was discovered successfully.`;
+                verdictCard.className = "p-4 rounded-xl border border-indigo-500/40 bg-indigo-950/20 space-y-2";
+            } else {
+                verdictTitle.textContent = "No Hamiltonian Path or Cycle ❌";
+                verdictDesc.textContent = "Backtracking search exhausted all options. This graph configuration is disconnected or non-Hamiltonian.";
+                verdictCard.className = "p-4 rounded-xl border border-amber-500/40 bg-amber-950/20 space-y-2";
+            }
+        }
+
+        function redrawCanvas() {
+            if (!ctx || !canvas) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#1e293b';
+            const gridSize = 30;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                for (let y = 0; y < canvas.height; y += gridSize) {
+                    ctx.fillRect(x, y, 1.5, 1.5);
+                }
+            }
+
+            edges.forEach((ed) => {
+                const uNode = vertices[ed.u];
+                const vNode = vertices[ed.v];
+                if (!uNode || !vNode) return;
+
+                let isHighlighted = false;
+                if (isSimulating && simulationStep > 0 && simulationStep < simulationPath.length) {
+                    const uInPath = simulationPath[simulationStep - 1];
+                    const vInPath = simulationPath[simulationStep];
+                    if ((ed.u === uInPath && ed.v === vInPath) || (ed.u === vInPath && ed.v === uInPath)) {
+                        isHighlighted = true;
+                    }
+                }
+
+                ctx.beginPath();
+                ctx.moveTo(uNode.x, uNode.y);
+                ctx.lineTo(vNode.x, vNode.y);
+                ctx.strokeStyle = isHighlighted ? '#10b981' : '#475569';
+                ctx.lineWidth = isHighlighted ? 4 : 2;
+                ctx.stroke();
+            });
+
+            vertices.forEach((v, idx) => {
+                ctx.beginPath();
+                ctx.arc(v.x, v.y, 22, 0, 2 * Math.PI);
+                
+                let isActive = isSimulating && simulationPath.length > 0 && simulationStep < simulationPath.length && simulationPath[simulationStep] === idx;
+                let isStart = idx === selectedStartVertex;
+
+                ctx.fillStyle = isActive ? '#6366f1' : (isStart ? '#065f46' : '#0f172a');
+                ctx.fill();
+                ctx.lineWidth = isStart ? 4 : 3;
+                ctx.strokeStyle = sandboxMode === 'delete' ? '#f59e0b' : (isActive ? '#a5b4fc' : (isStart ? '#10b981' : '#6366f1'));
+                ctx.stroke();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 11px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(v.name || `v${idx+1}`, v.x, v.y);
+
+                if (isStart) {
+                    ctx.save();
+                    ctx.fillStyle = '#10b981';
+                    ctx.beginPath();
+                    ctx.arc(v.x + 16, v.y - 16, 9, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 9px Inter';
+                    ctx.fillText('S', v.x + 16, v.y - 16);
+                    ctx.restore();
+                }
+            });
+        }
+
+        function startPlayback() {
+            if (!analysisResult) runHamiltonianCheck();
+            if (!analysisResult || (!analysisResult.hasCycle && !analysisResult.hasPath)) return;
+
+            simulationPath = analysisResult.hasCycle ? analysisResult.cycle : analysisResult.path;
+            isSimulating = true;
+            document.getElementById('btn-play').classList.add('hidden');
+            document.getElementById('btn-pause').classList.remove('hidden');
+
+            if (simulationInterval) clearInterval(simulationInterval);
+
+            simulationInterval = setInterval(() => {
+                if (simulationStep < simulationPath.length - 1) {
+                    stepNext();
+                } else {
+                    pausePlayback();
+                }
+            }, 1200);
+        }
+
+        function pausePlayback() {
+            isSimulating = false;
+            if (simulationInterval) clearInterval(simulationInterval);
+            document.getElementById('btn-play').classList.remove('hidden');
+            document.getElementById('btn-pause').classList.add('hidden');
+        }
+
+        function stopPlayback() {
+            pausePlayback();
+            simulationStep = 0;
+            simulationPath = [];
+            const trailBox = document.getElementById('path-trail-box');
+            if (trailBox) trailBox.innerHTML = `<span class="font-sans text-slate-500">Click "Play" to start traversal animation...</span>`;
+            redrawCanvas();
+        }
+
+        function stepNext() {
+            if (!analysisResult) runHamiltonianCheck();
+            if (!analysisResult || (!analysisResult.hasCycle && !analysisResult.hasPath)) return;
+            simulationPath = analysisResult.hasCycle ? analysisResult.cycle : analysisResult.path;
+
+            if (simulationStep < simulationPath.length - 1) {
+                simulationStep++;
+                const currNodeIdx = simulationPath[simulationStep];
+                const currNodeName = vertices[currNodeIdx].name || `v${currNodeIdx+1}`;
+                
+                const trailBox = document.getElementById('path-trail-box');
+                trailBox.innerHTML = `<div><span class="text-indigo-400 font-bold">Step ${simulationStep}:</span> Visited <span class="text-white font-semibold">${currNodeName}</span>.</div>`;
+                redrawCanvas();
+            } else {
+                pausePlayback();
+            }
+        }
+
+        function stepPrev() {
+            if (!analysisResult || (!analysisResult.hasCycle && !analysisResult.hasPath)) return;
+            simulationPath = analysisResult.hasCycle ? analysisResult.cycle : analysisResult.path;
+
+            if (simulationStep > 0) {
+                simulationStep--;
+                const currNodeIdx = simulationPath[simulationStep];
+                const currNodeName = vertices[currNodeIdx].name || `v${currNodeIdx+1}`;
+
+                const trailBox = document.getElementById('path-trail-box');
+                trailBox.innerHTML = `<div><span class="text-indigo-400 font-bold">Step ${simulationStep}:</span> Reverted to <span class="text-white font-semibold">${currNodeName}</span>.</div>`;
+                redrawCanvas();
+            }
+        }
+    </script>
+</body>
+</html>
